@@ -1,0 +1,13 @@
+table {
+    table-layout:fixed;
+    width:100%;
+}
+ul {
+    visibility: hidden;
+}
+.card {
+    visibility: hidden;
+}
+.tab-content {
+    visibility: hidden;
+}

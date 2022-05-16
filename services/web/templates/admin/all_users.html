@@ -1,0 +1,40 @@
+{% extends "admin/admin.html" %}
+
+{% block inner_block %}
+<br>
+
+<table class="table table-hover" >
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Email</th>
+            <th scope="col">Password</th>
+            <th scope="col">SignupTime</th>
+            <th scope="col">Confirmed</th>
+        </tr>
+    </thead>
+<tbody>
+{%  for user in users.items %}
+    <tr class='clickable-row' data-href={{ url_for('admin.checks_by_user', id=user.id) }}>
+        <td> {{ user.id }} </td>
+        <td> {{ user.email }} </td>
+        <td> {{ user.password }} </td>
+        <td> {{ momentjs(user.signupTime).format('YYYY/MM/DD HH:mm') }} </td>
+        <td> {{ user.confirmed }} </td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+    <li class="page-item {% if not users.has_prev %} disabled {% endif %}">
+        <a class="page-link" href="?page={{ users.prev_num }}">Left</a>
+    </li>
+    <li class="page-item {% if not users.has_next %} disabled {% endif %}">
+        <a class="page-link" href="?page={{ users.next_num }}">Right</a>
+    </li>
+    </ul>
+</nav>
+
+{% endblock %}

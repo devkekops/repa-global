@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+ <div class="row h-75">
+     <div class="col-3 my-auto mx-auto text-center">
+        <div class="text">
+            <h1>Login</h1>
+        </div>
+        <br>
+        <form method="POST" action="/login">
+            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+            <br>
+            <button type="submit" class="btn btn-info">Login</button>
+        </form>
+        <br>
+        <p>If you don't have an account, please <a href="{{ url_for('auth.signup') }}">Sign Up</a></p>
+    </div>
+</div>
+{% endblock %}

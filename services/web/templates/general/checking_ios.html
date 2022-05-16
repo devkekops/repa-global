@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br>
+
+<h1>Checking package {{name}}</h1>
+<!--<progress id="myProgress" max="100" value="0"></progress>-->
+<div class="progress">
+    <div id="myProgress" class="progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<div id = "progressText">
+    <label>Progress..</label>
+</div>
+<!-- Tab links -->
+<br>
+
+<div class="card border-info mb-3" id="card">
+    <div class="card-header" id="packageInfo"></div>
+    <div class="card-body text-info">
+        <p class="card-text" id="os"></p>
+        <p class="card-text" id="time"></p>
+    </div>
+</div><br>
+
+<ul class="nav nav-tabs" id="nav1">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#network">Network</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#urls">URLs</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#keys">Keys</a>
+    </li>
+    <li class="nav-item" id="customLi">
+        <a class="nav-link" data-toggle="tab" href="#custom">Custom</a>
+    </li>
+</ul>
+
+<div class="tab-content" id="tabs1">
+    <div class="tab-pane fade show active" id="network">
+        <table id="tableNetwork" class="table">
+            <thead>
+                <tr>
+                    <th style='width: 2%'>#</th>
+                    <th style='width: 18%'>Name</th>
+                    <th style='width: 7%'>Severity</th>
+                    <th style='width: 5%'>Found</th>
+                    <th style='width: 44%'>Proofs</th>
+                    <th style='width: 24%'>Info</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="urls">
+        <table id="tableUrls" class="table">
+            <thead>
+                <tr>
+                    <th style='width: 2%'>#</th>
+                    <th style='width: 18%'>Name</th>
+                    <th style='width: 7%'>Severity</th>
+                    <th style='width: 5%'>Found</th>
+                    <th style='width: 44%'>Proofs</th>
+                    <th style='width: 24%'>Info</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="keys">
+        <table id="tableKeys" class="table">
+            <thead>
+                <tr>
+                    <th style='width: 2%'>#</th>
+                    <th style='width: 18%'>Name</th>
+                    <th style='width: 7%'>Severity</th>
+                    <th style='width: 5%'>Found</th>
+                    <th style='width: 44%'>Proofs</th>
+                    <th style='width: 24%'>Info</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="custom">
+        <table id="tableCustom" class="table">
+            <thead>
+                <tr>
+                    <th style='width: 2%'>#</th>
+                    <th style='width: 18%'>Name</th>
+                    <th style='width: 7%'>Severity</th>
+                    <th style='width: 5%'>Found</th>
+                    <th style='width: 44%'>Proofs</th>
+                    <th style='width: 24%'>Info</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js">
+</script><script type="text/javascript" charset="utf-8">
+    var socket = io.connect('http://0.0.0.0:5000/test');
+    socket.on('connect', function() {
+        console.log('connection success');
+    });
+    socket.on("progress", function(msg) {
+        console.log(msg.text);
+        this.progress = msg.text;
+        $('#myProgress').attr('area-valuenow', msg.text);
+        $('#myProgress').attr("style","width:" + msg.text + "%");
+    });
+    socket.on("progressText", function(msg) {
+        console.log(msg);
+        document.getElementById('progressText').innerHTML = '<label>' + msg + '</label>';
+    });
+    socket.on("results", function(results) {
+        if (!results.custom){
+            $('#customLi').css('visibility', 'hidden');
+            $('#custom').css('visibility', 'hidden');
+        }
+
+        $(function() {
+            const tbodynetwork = $("#tableNetwork tbody");
+            $.each(results.checks.network, function(i, item) {
+                check = JSON.parse(item);
+                console.log(check);
+                i++;
+                tbodynetwork.append('<tr><td>' + i + '</td>' + '<td>' + check.name + '</td>' + '<td>' + check.severity + '</td>' + '<td>' + check.found + '</td>' + '<td><pre>' + check.proofs + '</pre></td>' + '<td>' + check.info + '</td></tr>')
+            });
+
+            const tbodyurls = $("#tableUrls tbody");
+            $.each(results.checks.urls, function(i, item) {
+                check = JSON.parse(item);
+                console.log(check);
+                i++;
+                tbodyurls.append('<tr><td>' + i + '</td>' + '<td>' + check.name + '</td>' + '<td>' + check.severity + '</td>' + '<td>' + check.found + '</td>' + '<td><pre>' + check.proofs + '</pre></td>' + '<td>' + check.info + '</td></tr>')
+            });
+
+            const tbodykeys = $("#tableKeys tbody");
+            $.each(results.checks.keys, function(i, item) {
+                check = JSON.parse(item);
+                console.log(check);
+                i++;
+                tbodykeys.append('<tr><td>' + i + '</td>' + '<td>' + check.name + '</td>' + '<td>' + check.severity + '</td>' + '<td>' + check.found + '</td>' + '<td><pre>' + check.proofs + '</pre></td>' + '<td>' + check.info + '</td></tr>')
+            });
+
+            if (results.custom) {
+                const tbodycustom = $("#tableCustom tbody");
+                $.each(results.checks.custom, function (i, item) {
+                    check = JSON.parse(item);
+                    i++;
+                    tbodycustom.append('<tr><td>' + i + '</td>' + '<td>' + check.name + '</td>' + '<td>' + check.severity + '</td>' + '<td>' + check.found + '</td>' + '<td><pre>' + check.proofs + '</pre></td>' + '<td>' + check.info + '</td></tr>')
+                });
+            }
+
+        });
+
+        <!--container = document.querySelector('#card');-->
+        <!--var cardBody = document.createElement('card-body');-->
+        <!--cardBody.innerHTML = '<div class="card-body"><h5 class="card-title">PackageId:'-->
+        <!--container.appendChild(cardBody);-->
+        $('#packageInfo').text('Package: ' + results.packageId);
+        $('#os').html('<p>OS: <b>' + results.os + '</b>  Version: <b>' + results.packageVersion + '</b>  Code Version: <b>' + results.packageCodeVersion + '</b></p>');
+        $('#time').html('Time: <b>' + results.time + '</b>');
+        $('#card').css('visibility', 'visible');
+        $('#nav1').css('visibility', 'visible');
+        $('#tabs1').css('visibility', 'visible');
+    });
+</script>
+{% endblock %}

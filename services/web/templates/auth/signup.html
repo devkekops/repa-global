@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+ <div class="row h-75">
+     <div class="col-3 my-auto mx-auto text-center">
+        <div class="text">
+            <h1>Sign Up</h1>
+        </div>
+        <br>
+        <form method="POST" action="/signup">
+            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+            <br>
+            <button type="submit" class="btn btn-info">Sign Up</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

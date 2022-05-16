@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+
+<h1>Check Results</h1><br>
+
+<div class="card border-info mb-3" id="card">
+    <div class="card-header" id="packageInfo">File: <b>{{ audit.filename }}</b>  Package Id: <b>{{ audit.packageId }}</b></div>
+    <div class="card-body text-info">
+        <p class="card-text" id="os">OS: <b>{{ audit.os }}</b>  Version: <b>{{ audit.packageVersion }}</b>  Code Version: <b>{{ audit.packageCodeVersion }}</b></p>
+        <p class="card-text" id="time">Start Time: <b>{{ momentjs(audit.startTime).format('YYYY/MM/DD HH:mm:ss') }}</b>  Time: <b>{{ audit.time }}</b></p>
+    </div>
+</div>
+
+<br>
+
+<ul class="nav nav-tabs" id="nav1">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#network">Network</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#urls">URLs</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#keys">Keys</a>
+    </li>
+    {% if audit.custom %}
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#custom">Custom</a>
+        </li>
+    {% endif %}
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="network">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style='width: 2%'>#</th>
+                    <th style='width: 18%'>Name</th>
+                    <th style='width: 7%'>Severity</th>
+                    <th style='width: 5%'>Found</th>
+                    <th style='width: 44%'>Proofs</th>
+                    <th style='width: 24%'>Info</th>
+                </tr>
+            </thead>
+            <tbody>
+            {%  for check in checkResult['network'] %}
+                <tr>
+                    <td> {{ loop.index }} </td>
+                    <td> {{ check.name }} </td>
+                    <td> {{ check.severity }} </td>
+                    <td> {{ check.found }} </td>
+                    <td><pre> {{ check.proofs|safe }} </pre></td>
+                    <td> {{ check.info|safe }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="urls">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style='width: 2%'>#</th>
+                    <th style='width: 18%'>Name</th>
+                    <th style='width: 7%'>Severity</th>
+                    <th style='width: 5%'>Found</th>
+                    <th style='width: 44%'>Proofs</th>
+                    <th style='width: 24%'>Info</th>
+                </tr>
+            </thead>
+            <tbody>
+            {%  for check in checkResult['urls'] %}
+                <tr>
+                    <td> {{ loop.index }} </td>
+                    <td> {{ check.name }} </td>
+                    <td> {{ check.severity }} </td>
+                    <td> {{ check.found }} </td>
+                    <td><pre> {{ check.proofs|safe }} </pre></td>
+                    <td> {{ check.info|safe }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="keys">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style='width: 2%'>#</th>
+                    <th style='width: 18%'>Name</th>
+                    <th style='width: 7%'>Severity</th>
+                    <th style='width: 5%'>Found</th>
+                    <th style='width: 44%'>Proofs</th>
+                    <th style='width: 24%'>Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%  for check in checkResult['keys'] %}
+                    <tr>
+                        <td> {{ loop.index }} </td>
+                        <td> {{ check.name }} </td>
+                        <td> {{ check.severity }} </td>
+                        <td> {{ check.found }} </td>
+                        <td><pre> {{ check.proofs|safe }} </pre></td>
+                        <td> {{ check.info|safe }} </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if audit.custom %}
+        <div class="tab-pane fade" id="custom">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style='width: 2%'>#</th>
+                        <th style='width: 18%'>Name</th>
+                        <th style='width: 7%'>Severity</th>
+                        <th style='width: 5%'>Found</th>
+                        <th style='width: 44%'>Proofs</th>
+                        <th style='width: 24%'>Info</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {%  for check in checkResult['custom'] %}
+                    <tr>
+                        <td> {{ loop.index }} </td>
+                        <td> {{ check.name }} </td>
+                        <td> {{ check.severity }} </td>
+                        <td> {{ check.found }} </td>
+                        <td><pre> {{ check.proofs|safe }} </pre></td>
+                        <td> {{ check.info|safe }} </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+</script>
+{% endblock %}

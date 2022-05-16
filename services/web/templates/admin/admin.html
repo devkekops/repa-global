@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<h1>Admin Panel</h1>
+<br>
+<a href="{{ url_for('admin.all_users') }}" class="btn btn-outline-info">All Users</a>
+<a href="{{ url_for('admin.all_checks') }}" class="btn btn-outline-info">All Checks</a>
+<br>
+
+{% block inner_block %}
+{% endblock %}
+
+{% endblock %}

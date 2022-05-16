@@ -1,0 +1,15 @@
+html, body {
+    height: 100%;
+}
+.container {
+    height: 100%
+}
+code {
+    color:  #5bc0de;
+    display: block;
+    white-space: pre-wrap
+}
+table {
+    table-layout: fixed;
+    width: 100%;
+}
